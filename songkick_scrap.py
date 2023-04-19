@@ -24,7 +24,7 @@ class FestivalScraper:
 
         for festival in festival_divs:
             festival_dict = {
-                "date": festival["title"],
+                "date": festival["title"][:-5],
                 "name": festival.find("p", class_="artists summary").find("a").find("strong").get_text(strip=True),
                 "location": festival.find('p', class_='location').get_text(strip=True),
                 "bands": festival.find("p", class_="artists summary").find("a").find("span").get_text(strip=True).split(

@@ -1,5 +1,3 @@
-import itertools
-
 import spotipy
 from spotipy.oauth2 import SpotifyOAuth
 from songkick_scrap import FestivalScraper
@@ -78,7 +76,6 @@ class CreatePlaylist:
         """Get the 2 top songs from an artist"""
         # get the artist id
         print(f"searching for {band}...")
-        song_uris = []
         try:
             artist_id = self.sp.search(q=f"artist:{band}", type="artist")["artists"]["items"][0]["id"]
             top_tracks = self.sp.artist_top_tracks(artist_id)["tracks"][:2]
@@ -90,10 +87,3 @@ class CreatePlaylist:
 
         else:
             return song_uris
-
-
-
-
-
-if __name__ == "__main__":
-    playlist = CreatePlaylist("se")
