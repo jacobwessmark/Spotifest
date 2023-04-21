@@ -43,15 +43,9 @@ class CreatePlaylist:
                 print(f"Found {len(bands)} bands playing at {festival_name}!")
                 break
 
-        # remove "and " from the last element
-        for i in range(len(bands)):
-            # Check if it's the last element
-            if i == len(bands) - 1:
-                # Remove "and " from the last element
-                bands[i] = bands[i].replace("and ", "")
         print(bands)
 
-        playlist_description = f"This is a summery of songs from the bands playing at {festival_name}."
+        playlist_description = f"This is a summry of songs from the bands playing at {festival_name}."
 
         new_playlist = self.sp.user_playlist_create(user=self.user_id,
                                                     name=festival_name,
@@ -75,8 +69,10 @@ class CreatePlaylist:
     def get_topp_songs(self, band):
         """Get the 2 top songs from an artist"""
         # get the artist id
-        print(f"searching for {band}...")
         try:
+            if band[:4] == "and ":
+                band = band[4:]
+            print(f"searching for {band}...")
             artist_id = self.sp.search(q=f"artist:{band}", type="artist")["artists"]["items"][0]["id"]
             top_tracks = self.sp.artist_top_tracks(artist_id)["tracks"][:2]
             # get the song uris
@@ -87,3 +83,7 @@ class CreatePlaylist:
 
         else:
             return song_uris
+
+
+if __name__ == "__main__":
+    festival_playlist = CreatePlaylist("se")

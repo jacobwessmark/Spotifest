@@ -1,6 +1,7 @@
 import bs4
 import requests
 
+# TODO: Vart ska denna filen ligga? I en egen mapp? I en egen app? I en egen app i en egen mapp?
 
 class FestivalScraper:
     def __init__(self, country):
@@ -24,8 +25,8 @@ class FestivalScraper:
 
         for festival in festival_divs:
             festival_dict = {
-                "date": festival["title"][:-5],
-                "name": festival.find("p", class_="artists summary").find("a").find("strong").get_text(strip=True),
+                "date": festival["title"],
+                "name": festival.find("p", class_="artists summary").find("a").find("strong").get_text(strip=True)[:-5],
                 "location": festival.find('p', class_='location').get_text(strip=True),
                 "bands": festival.find("p", class_="artists summary").find("a").find("span").get_text(strip=True).split(
                     ", ")

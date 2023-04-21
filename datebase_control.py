@@ -1,4 +1,3 @@
-from songkick_scrap import FestivalScraper
 import sqlite3
 
 

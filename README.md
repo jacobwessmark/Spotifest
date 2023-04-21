@@ -9,3 +9,4 @@ Sen vill vi söka efter dom artisterna och skapa en playlist på spotify.
 Spara spelistan all info om den på databasen. 
 Json -svaret från databasen innehåller, länk, info om spellistan. 
 
+http://get.festival.se/artist/megadeath/playlist
