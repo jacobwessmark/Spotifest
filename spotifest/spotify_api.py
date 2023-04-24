@@ -18,6 +18,7 @@ class CreatePlaylist:
         self.festival_data = self.get_list_of_festivals(country)
         self.create_playlist()
 
+
     @staticmethod
     def get_list_of_festivals(country):
         festival_scraper = FestivalScraper(country)
@@ -70,7 +71,7 @@ class CreatePlaylist:
         """Get the 2 top songs from an artist"""
         # get the artist id
         try:
-            if band[:4] == "and ":
+            if band.lower()[:4] == "and ":
                 band = band[4:]
             print(f"searching for {band}...")
             artist_id = self.sp.search(q=f"artist:{band}", type="artist")["artists"]["items"][0]["id"]
@@ -86,4 +87,6 @@ class CreatePlaylist:
 
 
 if __name__ == "__main__":
-    festival_playlist = CreatePlaylist("se")
+
+
+    festival_playlist = CreatePlaylist("us")
