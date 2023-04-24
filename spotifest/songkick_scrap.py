@@ -2,8 +2,15 @@ import sqlite3
 import sqlalchemy
 import bs4
 import requests
+from sqlalchemy.exc import IntegrityError
+
+from spotifest import app, db
+from spotifest.columns import FestivalBand, Festival, Band
+
 
 # TODO: Vart ska denna filen ligga? I en egen mapp? I en egen app? I en egen app i en egen mapp?
+# TODO: Fråga andreas vad alembic version är.
+
 
 class FestivalScraper:
     def __init__(self, country):
