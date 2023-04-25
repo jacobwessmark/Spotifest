@@ -1,10 +1,14 @@
 import spotipy
+from dotenv import load_dotenv
 from spotipy.oauth2 import SpotifyOAuth
 from songkick_scrap import FestivalScraper
 from pprint import pprint
+import os
 
-CLIENT_ID = "e8b39ccfe4be49d982de94a3f318f7e3"
-CLIENT_SECRET = "cd52133ec14641d084568319d33270c0"
+load_dotenv()
+
+CLIENT_ID = os.getenv("CLIENT_ID")
+CLIENT_SECRET = os.getenv("CLIENT_SECRET")
 
 
 class CreatePlaylist:

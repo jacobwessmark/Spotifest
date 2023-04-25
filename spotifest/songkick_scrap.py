@@ -1,5 +1,3 @@
-import sqlite3
-import sqlalchemy
 import bs4
 import requests
 from sqlalchemy.exc import IntegrityError
@@ -35,23 +33,26 @@ class FestivalScraper:
             for festival in festival_divs:
 
                 festival_db = Festival(date=festival["title"],
-                                    name=festival.find("p", class_="artists summary").find("a").find("strong").get_text(strip=True)[:-5] ,
-                                    venue=festival.find('p', class_='location').get_text(strip=True),
-                                    country=self.country_code
-                                    )
+                                       name=festival.find("p", class_="artists summary").find("a").find(
+                                           "strong").get_text(strip=True)[:-5],
+                                       venue=festival.find('p', class_='location').get_text(strip=True),
+                                       country=self.country_code
+                                       )
                 db.session.add(festival_db)
 
                 festival_dict = {
                     "date": festival["title"],
-                    "name": festival.find("p", class_="artists summary").find("a").find("strong").get_text(strip=True)[:-5],
+                    "name": festival.find("p", class_="artists summary").find("a").find("strong").get_text(strip=True)[
+                            :-5],
                     "location": festival.find('p', class_='location').get_text(strip=True),
-                    "bands": festival.find("p", class_="artists summary").find("a").find("span").get_text(strip=True).split(
+                    "bands": festival.find("p", class_="artists summary").find("a").find("span").get_text(
+                        strip=True).split(
                         ", ")
                 }
                 self.festival_list.append(festival_dict)
 
                 bands = festival.find("p", class_="artists summary").find("a").find("span").get_text(strip=True).split(
-                        ", ")
+                    ", ")
                 for band in bands:
                     try:
                         if band.lower()[:4] == "and ":
@@ -67,15 +68,7 @@ class FestivalScraper:
                     festival_band = FestivalBand(festival_name=festival_db.name, band_name=band_db.name)
                     db.session.add(festival_band)
 
-
-
-
             db.session.commit()
-
-
-
-
-
 
     def get_festivals(self):
         return self.festival_list
