@@ -27,3 +27,5 @@ class FestivalBand(db.Model):
 
     def __repr__(self):
         return f"{self.band_name} plays at {self.festival_name}"
+
+

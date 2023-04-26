@@ -1,8 +1,6 @@
 import spotipy
 from dotenv import load_dotenv
 from spotipy.oauth2 import SpotifyOAuth
-from songkick_scrap import FestivalScraper
-from pprint import pprint
 import os
 
 
@@ -24,8 +22,7 @@ class CreatePlaylist:
     def create_playlist(self):
         """Create a playlist for a festival"""
 
-        playlist_description = f"This is a summry of songs from the bands playing at {festival_name}."
-
+        playlist_description = f"This is a summary of songs from the bands playing at {self.festival}."
         new_playlist = self.sp.user_playlist_create(user=self.user_id,
                                                     name=self.festival,
                                                     public=True,
@@ -34,7 +31,7 @@ class CreatePlaylist:
         # get the playlist id
         playlist_id = new_playlist["id"]
         print("--------------------------------------------------")
-        print(f"Playlist for {festival_name} created successfully!")
+        print(f"Playlist for {self.festival} created successfully!")
         print(f"Playlist ID: {playlist_id}")
 
         # get the top songs from the bands
@@ -42,8 +39,10 @@ class CreatePlaylist:
 
         for band in self.bands:
             song_uri = self.get_topp_songs(band)
-            print(f"Adding songs to the {festival_name} playlist")
+            print(f"Adding songs to the {self.festival} playlist")
             self.sp.playlist_add_items(playlist_id=playlist_id, items=song_uri)
+
+        return playlist_id
 
     def get_topp_songs(self, band):
         """Get the 2 top songs from an artist"""
