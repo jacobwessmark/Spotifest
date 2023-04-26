@@ -5,56 +5,30 @@ from songkick_scrap import FestivalScraper
 from pprint import pprint
 import os
 
-load_dotenv()
 
-CLIENT_ID = os.getenv("CLIENT_ID")
-CLIENT_SECRET = os.getenv("CLIENT_SECRET")
 
 
 class CreatePlaylist:
-    def __init__(self, country):
-        self.sp = spotipy.Spotify(auth_manager=SpotifyOAuth(client_id=CLIENT_ID,
-                                                            client_secret=CLIENT_SECRET,
+    def __init__(self, bands, festival):
+
+        load_dotenv()
+        self.sp = spotipy.Spotify(auth_manager=SpotifyOAuth(client_id=os.getenv("CLIENT_ID"),
+                                                            client_secret=os.getenv("CLIENT_SECRET"),
                                                             redirect_uri="http://example.com",
                                                             scope="playlist-modify-private",
                                                             cache_path="token.txt"))
         self.user_id = self.sp.current_user()["id"]
-        self.festival_data = self.get_list_of_festivals(country)
-        self.create_playlist()
-
-
-    @staticmethod
-    def get_list_of_festivals(country):
-        festival_scraper = FestivalScraper(country)
-        festival_data = festival_scraper.get_festivals()
-
-        return festival_data
+        self.bands = bands
+        self.festival = festival
 
     def create_playlist(self):
         """Create a playlist for a festival"""
-        # prompt the user with the festival names
-        for festival in self.festival_data:
-            print(festival["name"] + " - " + festival["date"])
-        print("--------------------------------------------------")
-
-        festival_name = input("Which festival do you want to create a playlist for? ")
-
-        # get the bands playing at the festival
-        bands = []
-        print(f"searching for bands at {festival_name}...")
-        for festival in self.festival_data:
-            if festival["name"] == festival_name:
-                bands = festival["bands"]
-                print(f"Found {len(bands)} bands playing at {festival_name}!")
-                break
-
-        print(bands)
 
         playlist_description = f"This is a summry of songs from the bands playing at {festival_name}."
 
         new_playlist = self.sp.user_playlist_create(user=self.user_id,
-                                                    name=festival_name,
-                                                    public=False,
+                                                    name=self.festival,
+                                                    public=True,
                                                     collaborative=False,
                                                     description=playlist_description)
         # get the playlist id
@@ -66,7 +40,7 @@ class CreatePlaylist:
         # get the top songs from the bands
         print("--------------------------------------------------")
 
-        for band in bands:
+        for band in self.bands:
             song_uri = self.get_topp_songs(band)
             print(f"Adding songs to the {festival_name} playlist")
             self.sp.playlist_add_items(playlist_id=playlist_id, items=song_uri)
@@ -90,7 +64,7 @@ class CreatePlaylist:
             return song_uris
 
 
-if __name__ == "__main__":
-
-
-    festival_playlist = CreatePlaylist("us")
+# if __name__ == "__main__":
+#     new_playlist = CreatePlaylist(festival="Subkultfestival", bands=["Hammerfall", "Kanye West", "Celine Dion"])
+#     playlist_url = new_playlist.create_playlist()
+#     print(playlist_url)

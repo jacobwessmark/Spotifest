@@ -19,8 +19,23 @@
 # # /band/info
 # # Returns json with band information
 # @app.route('/band/info', methods=['GET'])
-#
-#
-# @app.route('/test', methods='GET')
-# def hello():
-#     return "hello world"
+
+
+# TODO: Make route for api instructions. (GET)
+@app.route('/', methods=['GET'])
+def api_instructions():
+    info_dict = {
+        "info": "This is the API for Spotifest. It is currently under development.",
+        "endpoints": {
+            "country": "/{country_code}",
+            "supported countries": "se, uk, us",
+            "festival/info": "/festival/info",
+            "band/info": "/band/info"
+
+        }
+    }
+
+    return jsonify(info_dict)
+
+
+
