@@ -1,9 +1,8 @@
 from spotifest import app, db
 from spotifest.columns import Festival, FestivalBand, Band
-from flask import url_for
 from flask import jsonify
-from json import dumps
 from spotifest.spotify_api import CreatePlaylist
+from spotifest.songkick_scrap import FestivalScraper
 
 # TODO: Fix bad requests send back status codes.
 # TODO: being able to add festivals/bands to the database, if authenticated.
@@ -12,7 +11,7 @@ from spotifest.spotify_api import CreatePlaylist
 # TODO: control the scraper with a route with dev privileges
 
 
-@app.route('/<festival>/create-playlist', methods=['GET'])
+@app.route('/festivals/<festival>/create-playlist', methods=['GET'])
 def create_playlist(festival):
 
     bands_in_playlist = [ band.band_name for band in FestivalBand.query.filter_by(festival_name=festival).all() ]
@@ -55,9 +54,7 @@ def get_bands(festival):
 
     return jsonify(band_dict)
 
-# # /band/info
-# # Returns json with band information
-# @app.route('/band/info', methods=['GET'])
+
 
 
 # TODO: Make route for api instructions. (GET)
@@ -67,10 +64,10 @@ def api_instructions():
         "info": "This is the API for Spotifest. It is currently under development.",
         "supported country codes": "se, uk, us, au, de, ca, br, id, es, nl, fr, mx, it, ar, ie",
         "endpoints": {
-            "country": "/{country_code}",
-            "supported countries": "se, uk, us",
-            "festival/info": "/festival/info",
-            "band/info": "/band/info"
+            "Get festivals in country": "/countries/<insert country code>",
+            "Get information about the festival": "/festivals/<insert festival here>",
+            "Creates playlist from selected festival": "/<insert festival here>/create-playlist",
+
 
         }
     }
