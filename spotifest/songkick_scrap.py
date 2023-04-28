@@ -6,8 +6,6 @@ from spotifest import app, db
 from spotifest.columns import FestivalBand, Festival, Band
 
 
-# TODO: Vart ska denna filen ligga? I en egen mapp? I en egen app? I en egen app i en egen mapp?
-# TODO: Fråga andreas vad alembic version är.
 
 
 class FestivalScraper:
@@ -32,14 +30,7 @@ class FestivalScraper:
 
             for festival in festival_divs:
 
-                festival_db = Festival(date=festival["title"],
-                                       name=festival.find("p", class_="artists summary").find("a").find(
-                                           "strong").get_text(strip=True)[:-5],
-                                       venue=festival.find('p', class_='location').get_text(strip=True),
-                                       country=self.country_code
-                                       )
-                db.session.add(festival_db)
-
+                # First we put all the data from scrape to a dict
                 festival_dict = {
                     "date": festival["title"],
                     "name": festival.find("p", class_="artists summary").find("a").find("strong").get_text(strip=True)[
@@ -49,26 +40,12 @@ class FestivalScraper:
                         strip=True).split(
                         ", ")
                 }
-                self.festival_list.append(festival_dict)
 
-                bands = festival.find("p", class_="artists summary").find("a").find("span").get_text(strip=True).split(
-                    ", ")
-                for band in bands:
-                    try:
-                        if band.lower()[:4] == "and ":
-                            band = band[4:]
-                        band_db = Band(name=band)
-                        db.session.add(band_db)
+                self.add_festival_to_db(festival_dict)
 
-                        db.session.commit()
-                    except IntegrityError:
-                        db.session.rollback()  # Roll back the transaction
-                        print(f"{band} already in database :)")
+                for band in festival_dict["bands"]:
+                    self.add_band_to_db(band)
 
-                    festival_band = FestivalBand(festival_name=festival_db.name, band_name=band_db.name)
-                    db.session.add(festival_band)
-
-            db.session.commit()
 
     def get_festivals(self):
         return self.festival_list

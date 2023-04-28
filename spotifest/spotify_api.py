@@ -7,7 +7,7 @@ import os
 
 
 class CreatePlaylist:
-    def __init__(self, bands, festival):
+    def __init__(self, bands=None, festival=None):
 
         load_dotenv()
         self.sp = spotipy.Spotify(auth_manager=SpotifyOAuth(client_id=os.getenv("CLIENT_ID"),
@@ -25,7 +25,7 @@ class CreatePlaylist:
         playlist_description = f"This is a summary of songs from the bands playing at {self.festival}."
         new_playlist = self.sp.user_playlist_create(user=self.user_id,
                                                     name=self.festival,
-                                                    public=True,
+                                                    public=False,
                                                     collaborative=False,
                                                     description=playlist_description)
         # get the playlist id

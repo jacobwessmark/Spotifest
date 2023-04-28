@@ -5,6 +5,12 @@ from flask import jsonify
 from json import dumps
 from spotifest.spotify_api import CreatePlaylist
 
+# TODO: Fix bad requests send back status codes.
+# TODO: being able to add festivals/bands to the database, if authenticated.
+# TODO: Vart ska denna filen ligga? I en egen mapp? I en egen app? I en egen app i en egen mapp?
+# TODO: Fråga andreas vad alembic version är.
+# TODO: control the scraper with a route with dev privileges
+
 
 @app.route('/<festival>/create-playlist', methods=['GET'])
 def create_playlist(festival):
@@ -59,6 +65,7 @@ def get_bands(festival):
 def api_instructions():
     info_dict = {
         "info": "This is the API for Spotifest. It is currently under development.",
+        "supported country codes": "se, uk, us, au, de, ca, br, id, es, nl, fr, mx, it, ar, ie",
         "endpoints": {
             "country": "/{country_code}",
             "supported countries": "se, uk, us",
@@ -70,5 +77,28 @@ def api_instructions():
 
     return jsonify(info_dict)
 
+
+# This route adds a custom festival to the database.
+@app.route('/database/Jacobs Backyard', methods=['GET'])
+def add_festival():
+    festival_dict = {
+        "name": "Jacobs Backyard",
+        "date": "09/09/09",
+        "venue": "Bajspalatset",
+        "bands": ["Minpipa", "Agusa", "Jesus"],
+        "country": "ar"
+    }
+
+    new_festival = FestivalScraper()
+    new_festival.add_festival_to_db(festival_dict)
+    new_festival.add_band_to_db(festival_dict)
+
+    success = {
+        "success": f"Added {festival_dict['name']} to database successfully"
+    }
+
+    return jsonify(success, festival_dict)
+
+# add scraper route here
 
 
