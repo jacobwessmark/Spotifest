@@ -14,6 +14,8 @@ class FestivalScraper:
         self.country_code = country
 
     def add_festivals_to_list(self):
+
+        # Vi använder oss av app.app_context() för att kunna använda oss av SQLAlchemy
         with app.app_context():
             # Get the HTML from the page
             res = requests.get(f'https://www.songkick.com/festivals/countries/{self.country_code}')
@@ -75,3 +77,8 @@ class FestivalScraper:
                                )
         db.session.add(festival_db)
         return festival_db
+
+
+if __name__ == "__main__":
+    scraper = FestivalScraper(country="uk")
+    scraper.add_festivals_to_list()

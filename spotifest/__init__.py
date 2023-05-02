@@ -2,6 +2,7 @@ from flask import Flask
 from config import Config
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
+from flask_swagger_ui import get_swaggerui_blueprint
 
 # The application instance is created as an instance of class Flask in the __init__.py script, at the top-level.
 app = Flask(__name__)
