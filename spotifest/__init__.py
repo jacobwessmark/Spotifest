@@ -13,4 +13,17 @@ db = SQLAlchemy(app)
 # The migrate instance is created as an instance of class Migrate in the __init__.py script, at the top-level.
 migrate = Migrate(app, db)
 
+SWAGGER_URL = '/swagger'
+API_URL = '/static/Spotifest.yaml'
+
+swaggerui_blueprint = get_swaggerui_blueprint(
+    SWAGGER_URL,
+    API_URL,
+    config={
+        'app_name': "Spotifest API"
+    })
+
+
+app.register_blueprint(swaggerui_blueprint, url_prefix=SWAGGER_URL)
+
 from spotifest import routes, columns

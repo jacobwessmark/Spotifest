@@ -43,9 +43,7 @@ class FestivalScraper:
                 }
 
                 self.add_festival_to_db(festival_dict)
-
-                for band in festival_dict["bands"]:
-                    self.add_band_to_db(band)
+                self.add_band_to_db(festival_dict)
 
 
     def get_festivals(self):
