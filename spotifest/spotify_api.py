@@ -4,8 +4,6 @@ from spotipy.oauth2 import SpotifyOAuth
 import os
 
 
-
-
 class CreatePlaylist:
     def __init__(self, bands=None, festival=None):
 
@@ -61,9 +59,3 @@ class CreatePlaylist:
 
         else:
             return song_uris
-
-
-# if __name__ == "__main__":
-#     new_playlist = CreatePlaylist(festival="Subkultfestival", bands=["Hammerfall", "Kanye West", "Celine Dion"])
-#     playlist_url = new_playlist.create_playlist()
-#     print(playlist_url)

@@ -1,20 +1,20 @@
 import sqlalchemy.exc
 
 from spotifest import app, db
-from spotifest.columns import Festival, FestivalBand, Band
+from spotifest.models import Festival, FestivalBand, Band
 from flask import jsonify, request
 from spotifest.spotify_api import CreatePlaylist
-from spotifest.songkick_scrap import FestivalScraper
+from spotifest.songkick_scrap import FestivalCreator
 from werkzeug.exceptions import BadRequest
 
 
 # TODO: Fix bad requests send back status codes med try och except IF request.method == 'GET'.
-# TODO: being able to add festivals/bands to the database, if authenticated.
-# TODO: control the scraper with a route with dev privileges
 # TODO: Skriv kommentarer
 # TODO: Testa allt i postman
 # TODO: Error handling med /database man hade kunnat kolla att "content-type" är application/json och att den innehåller
 #  nyckelvärden; name, data, country, venue och bands samt kolla typen av nyckelvärden
+# TODO: Ska vi ha implementera auth?
+
 
 
 @app.route('/', methods=['GET'])
@@ -85,9 +85,10 @@ def create_playlist(festival):
 
 @app.route('/database', methods=['POST'])
 def add_festival():
+    # TODO: Jag försökte lägga Urkult med många band, den la bara till det första bandet i listan..
     # Här tar vi emot ett json-objekt med festivaldata
     festival_dict = request.json
-    new_festival = FestivalScraper()
+    new_festival = FestivalCreator()
     new_festival.add_festival_to_db(festival_dict)
     new_festival.add_band_to_db(festival_dict)
 
@@ -97,5 +98,10 @@ def add_festival():
 
     return jsonify(result, festival_dict)
 
-# add scraper route here
-
+# This route uses the FestivalCreator class to scrape festivals from a country and add them to the database.
+@app.route('/database/<country>', methods=['GET'])
+# TODO: Ska denna va POST eller GET?
+def add_festivals(country):
+    new_country = FestivalCreator(country=country)
+    new_country.scrape_festivals_from_web()
+    return jsonify({"result": f"Added festivals from {country} to database successfully"})

@@ -1,5 +1,5 @@
 from spotifest import app, db
-from spotifest.columns import Festival, FestivalBand, Band
+from spotifest.models import Festival, FestivalBand, Band
 from flask import url_for
 from flask import jsonify
 from json import dumps

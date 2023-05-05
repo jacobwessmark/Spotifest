@@ -26,4 +26,4 @@ swaggerui_blueprint = get_swaggerui_blueprint(
 
 app.register_blueprint(swaggerui_blueprint, url_prefix=SWAGGER_URL)
 
-from spotifest import routes, columns
+from spotifest import routes, models

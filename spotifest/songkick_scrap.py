@@ -1,19 +1,16 @@
 import bs4
 import requests
 from sqlalchemy.exc import IntegrityError
-
 from spotifest import app, db
-from spotifest.columns import FestivalBand, Festival, Band
+from spotifest.models import FestivalBand, Festival, Band
 
 
-
-
-class FestivalScraper:
+class FestivalCreator:
     def __init__(self, country=None):
         self.festival_list = []
         self.country_code = country
 
-    def add_festivals_to_list(self):
+    def scrape_festivals_from_web(self):
 
         # Vi använder oss av app.app_context() för att kunna använda oss av SQLAlchemy
         with app.app_context():
@@ -46,9 +43,6 @@ class FestivalScraper:
                 self.add_band_to_db(festival_dict)
 
 
-    def get_festivals(self):
-        return self.festival_list
-
     @staticmethod
     def add_band_to_db(festival_dict):
         try:
@@ -67,7 +61,8 @@ class FestivalScraper:
             db.session.rollback()  # Roll back the transaction
             print(f"{band} already in database :)")
 
-    def add_festival_to_db(self, festival_dict):
+    @staticmethod
+    def add_festival_to_db(festival_dict):
         festival_db = Festival(date=festival_dict["date"],
                                name=festival_dict["name"],
                                venue=festival_dict["venue"],
@@ -75,8 +70,3 @@ class FestivalScraper:
                                )
         db.session.add(festival_db)
         return festival_db
-
-
-if __name__ == "__main__":
-    scraper = FestivalScraper(country="uk")
-    scraper.add_festivals_to_list()
