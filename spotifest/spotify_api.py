@@ -5,6 +5,7 @@ import os
 
 
 class CreatePlaylist:
+    """Creates a playlist for a festival and adds the top songs from the bands playing at the festival"""
     def __init__(self, bands=None, festival=None):
 
         load_dotenv()
@@ -18,7 +19,7 @@ class CreatePlaylist:
         self.festival = festival
 
     def create_playlist(self):
-        """Create a playlist for a festival"""
+        """Creates a playlist for a festival and return the playlist id"""
 
         playlist_description = f"This is a summary of songs from the bands playing at {self.festival}."
         new_playlist = self.sp.user_playlist_create(user=self.user_id,
@@ -36,14 +37,18 @@ class CreatePlaylist:
         print("--------------------------------------------------")
 
         for band in self.bands:
+            # Check if the band is in Spotify
             song_uri = self.get_topp_songs(band)
+            if song_uri is None:
+                continue
+            # Add the songs to the playlist
             print(f"Adding songs to the {self.festival} playlist")
             self.sp.playlist_add_items(playlist_id=playlist_id, items=song_uri)
 
         return playlist_id
 
     def get_topp_songs(self, band):
-        """Get the 2 top songs from an artist"""
+        """Get the 2 top songs from an artist and return the song uris in a list"""
         # get the artist id
         try:
             if band.lower()[:4] == "and ":
@@ -59,3 +64,5 @@ class CreatePlaylist:
 
         else:
             return song_uris
+
+

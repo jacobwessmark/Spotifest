@@ -6,11 +6,12 @@ from spotifest.models import FestivalBand, Festival, Band
 
 
 class FestivalCreator:
+    """This class is used to scrape festivals from songkick.com or manually add them to the database"""
     def __init__(self, country=None):
-        self.festival_list = []
         self.country_code = country
 
     def scrape_festivals_from_web(self):
+        """This method scrapes festivals from songkick.com and adds them to the database"""
 
         # Vi använder oss av app.app_context() för att kunna använda oss av SQLAlchemy
         with app.app_context():
@@ -45,6 +46,7 @@ class FestivalCreator:
 
     @staticmethod
     def add_band_to_db(festival_dict):
+        """This method adds bands to the database"""
         try:
             for band in festival_dict["bands"]:
 
@@ -63,6 +65,7 @@ class FestivalCreator:
 
     @staticmethod
     def add_festival_to_db(festival_dict):
+        """This method adds festivals to the database"""
         festival_db = Festival(date=festival_dict["date"],
                                name=festival_dict["name"],
                                venue=festival_dict["venue"],
