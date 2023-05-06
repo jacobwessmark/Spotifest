@@ -14,7 +14,10 @@ from werkzeug.exceptions import BadRequest
 # TODO: Error handling med /database man hade kunnat kolla att "content-type" är application/json och att den innehåller
 #  nyckelvärden; name, data, country, venue och bands samt kolla typen av nyckelvärden
 # TODO: Ska vi ha implementera auth?
-# TODO: Lägg till sista routes i swagger
+# TODO: Gör 2 personas
+# TODO: Gör en costumer journey map
+# TODO: Övervakning?
+# TODO: Gör klart swagger
 
 
 @app.route('/', methods=['GET'])
@@ -85,7 +88,6 @@ def create_playlist(festival):
 
 @app.route('/database', methods=['POST'])
 def add_festival():
-    # TODO: Jag försökte lägga Urkult med många band, den la bara till det första bandet i listan.
     # Här tar vi emot ett json-objekt med festivaldata
     festival_dict = request.json
     new_festival = FestivalCreator()
@@ -100,7 +102,7 @@ def add_festival():
 
 # This route uses the FestivalCreator class to scrape festivals from a country and add them to the database.
 @app.route('/database/<country>', methods=['GET'])
-# TODO: Ska denna va POST eller GET?
+# TODO: Ska denna va POST eller GET? Ska den ha country i path eller som query parameter?,
 def add_festivals(country):
     new_country = FestivalCreator(country=country)
     new_country.scrape_festivals_from_web()
