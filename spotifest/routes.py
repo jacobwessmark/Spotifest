@@ -57,7 +57,6 @@ def get_bands(festival):
     for j in range(len(bands)):
         band = {
             "name": bands[j].band_name,
-            "festival": bands[j].festival_name,
         }
         band_list.append(band)
     return jsonify(band_list)
