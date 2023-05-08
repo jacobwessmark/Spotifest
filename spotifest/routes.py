@@ -4,20 +4,13 @@ from spotifest import app, db
 from spotifest.models import Festival, FestivalBand, Band
 from flask import jsonify, request
 from spotifest.spotify_api import CreatePlaylist
-from spotifest.songkick_scrap import FestivalCreator
+from spotifest.db_add import FestivalCreator
 from werkzeug.exceptions import BadRequest
 
 
 # TODO: Fix bad requests send back status codes med try och except IF request.method == 'GET'.
 # TODO: Skriv kommentarer
-# TODO: Testa allt i postman
-# TODO: Error handling med /database man hade kunnat kolla att "content-type" är application/json och att den innehåller
-#  nyckelvärden; name, data, country, venue och bands samt kolla typen av nyckelvärden
-# TODO: Ska vi ha implementera auth?
-# TODO: Gör 2 personas
-# TODO: Gör en costumer journey map
-# TODO: Övervakning?
-# TODO: Gör klart swagger
+# TODO: Fixa ReadME filen så att Andreas vet hur han startar programmet och använder det från sin burk :) måste skapa databas med db init
 
 
 @app.route('/', methods=['GET'])
@@ -100,9 +93,10 @@ def add_festival():
 
     return jsonify(result, festival_dict)
 
+
+
 # This route uses the FestivalCreator class to scrape festivals from a country and add them to the database.
 @app.route('/database/<country>', methods=['GET'])
-# TODO: Ska denna va POST eller GET? Ska den ha country i path eller som query parameter?,
 def add_festivals(country):
     new_country = FestivalCreator(country=country)
     new_country.scrape_festivals_from_web()
