@@ -3,6 +3,7 @@ import requests
 from sqlalchemy.exc import IntegrityError
 from spotifest import app, db
 from spotifest.models import FestivalBand, Festival, Band
+from flask import jsonify
 
 
 class FestivalCreator:
@@ -43,25 +44,26 @@ class FestivalCreator:
                 self.add_festival_to_db(festival_dict)
                 self.add_band_to_db(festival_dict)
 
-
     @staticmethod
     def add_band_to_db(festival_dict):
-        """This method adds bands to the database"""
-        try:
-            for band in festival_dict["bands"]:
+        """This method adds bands to the database, there needs to be a festival in the database in order
+        to make the festival_band relation, so make sure you've added the festival before calling this method"""
+        for band in festival_dict["bands"]:
 
-                if band.lower()[:4] == "and ":
-                    band = band[4:]
-                band_db = Band(name=band)
+            if band.lower()[:4] == "and ":
+                band = band[4:]
+            band_db = Band(name=band)
+            try:
                 db.session.add(band_db)
                 db.session.commit()
-                festival_band = FestivalBand(festival_name=festival_dict["name"], band_name=band)
-                db.session.add(festival_band)
-                db.session.commit()
+            except IntegrityError:
+                db.session.rollback()  # Roll back the transaction
+                print(f"{band} already in database. ")
 
-        except IntegrityError:
-            db.session.rollback()  # Roll back the transaction
-            print(f"{band} already in database :)")
+            festival_band = FestivalBand(festival_name=festival_dict["name"], band_name=band)
+            db.session.add(festival_band)
+            db.session.commit()
+        return {"band_result": f"Added {festival_dict['bands']} to database successfully"}
 
     @staticmethod
     def add_festival_to_db(festival_dict):
@@ -71,5 +73,12 @@ class FestivalCreator:
                                venue=festival_dict["venue"],
                                country=festival_dict["country"]
                                )
-        db.session.add(festival_db)
-        return festival_db
+        try:
+            db.session.add(festival_db)
+            db.session.commit()
+            return {"festival_result": f"Added {festival_dict['name']} to database successfully"}
+
+        except IntegrityError:
+            db.session.rollback()  # Roll back the transaction
+            return {"error": f"{festival_dict['name']} already in database :"}
+

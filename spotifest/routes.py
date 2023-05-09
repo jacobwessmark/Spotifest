@@ -86,7 +86,7 @@ def add_festival():
     festival_result = new_festival.add_festival_to_db(festival_dict)
     band_result = new_festival.add_band_to_db(festival_dict)
 
-    return jsonify(result, festival_dict)
+    return jsonify(festival_result, band_result)
 
 
 
