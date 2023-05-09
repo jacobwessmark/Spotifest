@@ -83,12 +83,8 @@ def add_festival():
     # Här tar vi emot ett json-objekt med festivaldata
     festival_dict = request.json
     new_festival = FestivalCreator()
-    new_festival.add_festival_to_db(festival_dict)
-    new_festival.add_band_to_db(festival_dict)
-
-    result = {
-        "result": f"Added {festival_dict['name']} to database successfully"
-    }
+    festival_result = new_festival.add_festival_to_db(festival_dict)
+    band_result = new_festival.add_band_to_db(festival_dict)
 
     return jsonify(result, festival_dict)
 
