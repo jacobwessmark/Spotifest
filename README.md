@@ -15,8 +15,6 @@ Run pip install -r requirements.txt to install the necessary Python packages.
 
 # Database Setup: 
 Initialize and migrate your database using Flask-Migrate commands:  
-csharp  
-Copy code  
 flask db init  
 flask db migrate  
 flask db upgrade  
