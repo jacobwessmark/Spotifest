@@ -1,3 +1,4 @@
+*(Developed as part of my studies at KYH in Malmö)*
 # Welcome to Spotifest!
 Spotifest is an innovative web application that integrates with Spotify to create festival-specific playlists. Leveraging the power of Python, Flask, and Spotify's API, Spotifest offers a unique experience for festival-goers and music enthusiasts.
 
